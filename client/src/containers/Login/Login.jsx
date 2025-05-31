@@ -3,7 +3,6 @@ import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import API from "../../utils/API";
-import jwt from "jsonwebtoken";
 import { Link } from "react-router-dom";
 import "./login.css";
 
@@ -60,36 +59,27 @@ const Login = (props) => {
     if (isValid) {
       API.loginUser(loginObject)
         .then((response) => {
-          jwt.verify(
-            response.data.token,
-            process.env.REACT_APP_JWT_SIGNATURE,
-            (err, decoded) => {
-              if (err) {
-                console.log(err);
-              } else {
-                props.setUserId(response.data._id);
-                // sets token to state
-                props.setToken(response.data.token);
+          // No JWT verification on frontend
+          props.setUserId(response.data._id);
+          // sets token to state
+          props.setToken(response.data.token);
 
-                // set the token to localStorage
-                localStorage.setItem("token", response.data.token);
+          // set the token to localStorage
+          localStorage.setItem("token", response.data.token);
 
-                // set role to state
-                props.setRole(response.data.role);
+          // set role to state
+          props.setRole(response.data.role);
 
-                //set role to local storage
-                localStorage.setItem("role", response.data.role);
-                toast.success("Login successful. Happy Shopping!", {
-                  hideProgressBar: true,
-                });
+          //set role to local storage
+          localStorage.setItem("role", response.data.role);
+          toast.success("Login successful. Happy Shopping!", {
+            hideProgressBar: true,
+          });
 
-                // if user is an admin, redirect user to admin page otherwise redirect to all products page
-                response.data.role === "admin"
-                  ? history.push("/admin")
-                  : history.push("/allproducts");
-              }
-            }
-          );
+          // if user is an admin, redirect user to admin page otherwise redirect to all products page
+          response.data.role === "admin"
+            ? history.push("/admin")
+            : history.push("/allproducts");
         })
         .catch((err) => {
           // potentially change this to a modal where user can click to sign up or just re-enter login info

@@ -47,7 +47,7 @@ const CartItem = (props) => {
             alt="item description"
           />
           <span>
-            {props.lineItem.name} ( ${props.lineItem.price} per{" "}
+            {props.lineItem.name} ( LKR {props.lineItem.price} per{" "}
             {props.lineItem.unitSize}-{props.lineItem.unitType} )
           </span>
         </div>
@@ -75,7 +75,7 @@ const CartItem = (props) => {
           className="vertical-center"
           style={{ height: 55, justifyContent: "center" }}
         >
-          <div>${props.lineItem.totalCost.toFixed(2)}</div>
+          <div>LKR {props.lineItem.totalCost.toFixed(2)}</div>
         </div>
       </td>
       <td className="is-vcentered">

@@ -34,7 +34,7 @@ const UserCardContent = (props) => {
         <div className="media-content">
           <p className="title productTitle">{props.name}</p>
           <p className="subtitle productDetails">
-            ${props.price} per {props.unitSize} {props.unitType}
+            LKR {props.price} per {props.unitSize} {props.unitType}
           </p>
           <p className="subtitle productDesc">{props.description}</p>
 

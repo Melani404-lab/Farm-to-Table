@@ -27,7 +27,7 @@ const OrderHistoryItem = ({ lineItem, index }) => {
               "Status 404: Product Not Found"
             ) : (
               <span>
-                {lineItem.product.name} ( ${lineItem.price} per{" "}
+                {lineItem.product.name} ( LKR {lineItem.price} per{" "}
                 {lineItem.product.unitSize}-{lineItem.product.unitType} )
               </span>
             )}
@@ -47,7 +47,7 @@ const OrderHistoryItem = ({ lineItem, index }) => {
             className="vertical-center"
             style={{ height: 20, justifyContent: "center" }}
           >
-            <div>${lineItem.totalCost}</div>
+            <div>LKR {lineItem.totalCost}</div>
           </div>
         </td>
       </tr>

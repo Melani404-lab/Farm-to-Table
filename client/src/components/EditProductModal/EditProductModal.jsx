@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import API from "../../utils/API";
-import productImages from "../../images.json";
 
 const productType = [
   {
@@ -32,40 +31,50 @@ const EditProductModal = (props) => {
     description: "",
     pathway: "",
   });
-
+  
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState("./assets/icons/addproducts.svg");
   const [errorMessage, setErrorMessage] = useState({});
 
   const validateForm = (value) => {
     let errors = {};
     let isValid = false;
 
-    const regQuant = /^\d+$/;
-    const regPrice = /^\d+(?:\.\d{1,2})?$/;
-
     // product name check
     if (!value.name.trim()) {
       errors.name = "Product Name required";
     }
 
+    // quantity check
+    if (!value.quantity) {
+      errors.quantity = "Quantity required";
+    } else if (isNaN(Number(value.quantity)) || Number(value.quantity) < 0) {
+      errors.quantity = "Enter a valid quantity";
+    }
+
+    // unit size check
     if (!value.unitSize) {
       errors.unitSize = "Unit size required";
-    } else if (!regQuant.test(value.unitSize)) {
+    } else if (isNaN(Number(value.unitSize)) || Number(value.unitSize) <= 0) {
       errors.unitSize = "Enter a valid unit size";
     }
 
+    // unit type check
     if (!value.unitType) {
-      errors.unitType = "Quantity required";
+      errors.unitType = "Unit type required";
     }
 
+    // description check
     if (!value.description) {
       errors.description = "Description required";
     } else if (value.description.length > 50) {
       errors.description = "Description is too long (40 character limit)";
     }
 
+    // price check
     if (!value.price) {
       errors.price = "Price required";
-    } else if (!regPrice.test(value.price)) {
+    } else if (isNaN(Number(value.price)) || Number(value.price) <= 0) {
       errors.price = "Enter a valid price";
     }
 
@@ -74,7 +83,6 @@ const EditProductModal = (props) => {
     }
 
     setErrorMessage(errors);
-
     return isValid;
   };
 
@@ -91,6 +99,11 @@ const EditProductModal = (props) => {
           description: res.data.description,
           pathway: res.data.pathway,
         });
+        
+        // Set the preview image to the product's existing image if available
+        if (res.data.pathway) {
+          setPreviewImage(res.data.pathway);
+        }
       });
     }
   }, [props.id]);
@@ -100,37 +113,39 @@ const EditProductModal = (props) => {
     setProductObject({ ...productObject, [name]: value });
   };
 
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+      // Create preview URL for the selected image
+      const previewUrl = URL.createObjectURL(file);
+      setPreviewImage(previewUrl);
+    }
+  };
+
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    let newPathway;
-
     let isValid = validateForm(productObject);
 
     if (isValid) {
-      props.handleModalState();
-      for (let i = 0; i < productImages.length; i++) {
-        if (
-          productImages[i].productName.includes(
-            productObject.name.toLowerCase()
-          )
-        ) {
-          newPathway = process.env.PUBLIC_URL + productImages[i].imagePathway;
-        }
+      // Create a FormData object to handle file upload
+      const formData = new FormData();
+      
+      // Append all product data to the FormData
+      formData.append('name', productObject.name);
+      formData.append('unitSize', productObject.unitSize);
+      formData.append('price', productObject.price);
+      formData.append('quantity', productObject.quantity);
+      formData.append('category', productObject.category);
+      formData.append('unitType', productObject.unitType);
+      formData.append('description', productObject.description);
+      
+      // Append the image file if one is selected
+      if (selectedImage) {
+        formData.append('image', selectedImage);
       }
-      if (!newPathway) {
-        let placeholder = "/assets/product_images/placeholder.png";
-        newPathway = process.env.PUBLIC_URL + placeholder;
-      }
-      API.updateProduct(props.id, {
-        name: productObject.name,
-        unitSize: productObject.unitSize,
-        price: productObject.price,
-        quantity: productObject.quantity,
-        category: productObject.category,
-        unitType: productObject.unitType,
-        description: productObject.description,
-        pathway: newPathway,
-      })
+
+      API.updateProduct(props.id, formData)
         .then(() => {
           props.handleModalState();
           props.loadProducts();
@@ -144,10 +159,12 @@ const EditProductModal = (props) => {
             description: "",
             pathway: "",
           });
+          setSelectedImage(null);
         })
         .catch((err) => console.log(err));
     }
   };
+  
   return (
     <>
       <div className="modal-background"></div>
@@ -161,13 +178,33 @@ const EditProductModal = (props) => {
           <form className="create-form">
             <div className="container has-text-centered">
               <div className="column is-10 is-offset-1">
-                <img
-                  title="Stock Image"
-                  id="product-image-edit"
-                  src="./assets/icons/addproducts.svg"
-                  alt="fresh produce"
-                  height="auto"
-                />
+                <div className="image-upload-container">
+                  <img
+                    title="Product Image"
+                    id="product-image-edit"
+                    src={previewImage}
+                    alt="Product preview"
+                    height="auto"
+                    className="product-image-preview"
+                  />
+                  <br />
+                  <div className="file">
+                    <label className="file-label">
+                      <input 
+                        className="file-input" 
+                        type="file" 
+                        name="image" 
+                        accept="image/*"
+                        onChange={handleImageChange}
+                      />
+                      <span className="file-cta">
+                        <span className="file-label">
+                          Change product image...
+                        </span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
                 <br />
 
                 {/* What kind of product it is */}
@@ -281,7 +318,7 @@ const EditProductModal = (props) => {
                   <div className="field add-products-fields">
                     <label className="label">Price</label>
                     <div className="control has-icons-left">
-                      <span className="icon is-small is-left">$</span>
+                      <span className="icon is-small is-left">LKR</span>
                       <input
                         className="input"
                         id="productPriceEdit"

@@ -13,10 +13,14 @@ import Footer from "./components/Footer/Footer";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import CartContext from "./utils/CartContext";
 import OrderHistory from "./containers/OrderHistory/OrderHistory";
+import Messages from "./components/Messages/Messages"; // Import the Messages component
 import "./App.css";
+import emailjs from "emailjs-com";
 import { ToastContainer, toast } from "react-toastify";
 
 function App() {
+  // Initialize EmailJS with your user ID
+  emailjs.init("J81FZuXzZ9RyJs4E_");
   const [token, setToken] = useState(
     // checks to see if there is a token in localStorage and uses that or else sets state to ""
     localStorage.getItem("token") ? localStorage.getItem("token") : ""
@@ -140,13 +144,23 @@ function App() {
               path="/orderHistory"
               render={(props) => <OrderHistory {...props} />}
             />
+            {/* Messages route - accessible to any authenticated user */}
+            <ProtectedRoute
+              path="/messages"
+              component={Messages}
+              token={token}
+              role={role}
+              adminOnly={false} // not admin-only
+            />
 
+            {/* Admin route - only accessible to admins */}
             <ProtectedRoute
               exact
               path="/admin"
               component={AdminProducts}
               token={token}
               role={role}
+              adminOnly={true} // admin-only
             />
             <Route exact path="/" component={Home} />
           </Switch>

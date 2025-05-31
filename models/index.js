@@ -3,4 +3,5 @@ module.exports = {
   Order: require("./Order"),
   Products: require("./Products"),
   User: require("./User"),
+  Message: require("./Message")
 };

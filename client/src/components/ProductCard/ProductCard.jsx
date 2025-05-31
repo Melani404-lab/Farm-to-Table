@@ -66,7 +66,7 @@ const ProductCard = ({
       const maxCanOrder = quantity - addedProductState;
       let warningMessage =
         "We are sorry but the quantity you are trying to order would exceed the amount that we have in stock.\n";
-      warningMessage += `The maximum amount of units you can order at this time ${maxCanOrder} units.`;
+      warningMessage += `The maximum amount of units you can order at this time LKR {maxCanOrder} units.`;
       toast.dark(warningMessage, { hideProgressBar: true, closeOnClick: true });
       setDropDownState(maxCanOrder);
       return;

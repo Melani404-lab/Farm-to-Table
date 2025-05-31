@@ -1,7 +1,6 @@
 import { useState } from "react";
 import API from "../../utils/API";
 import "./add.css";
-import productImages from "../../images.json";
 
 const productType = [
   {
@@ -31,48 +30,51 @@ const AddProductModal = (props) => {
     category: "fruit",
     unitType: "",
     description: "",
-    pathway: "",
   });
-
+  
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState("./assets/icons/addproducts.svg");
   const [errorMessage, setErrorMessage] = useState({});
 
   const validateForm = (value) => {
     let errors = {};
     let isValid = false;
 
-    const regQuant = /^\d+$/;
-    const regPrice = /^\d+(?:\.\d{1,2})?$/;
-
     // product name check
     if (!value.name.trim()) {
       errors.name = "Product Name required";
     }
-    // unit type check
+
+    // quantity check
     if (!value.quantity) {
       errors.quantity = "Quantity required";
-    } else if (!regQuant.test(value.quantity)) {
+    } else if (isNaN(Number(value.quantity)) || Number(value.quantity) < 0) {
       errors.quantity = "Enter a valid quantity";
     }
 
+    // unit size check
     if (!value.unitSize) {
       errors.unitSize = "Unit size required";
-    } else if (!regQuant.test(value.unitSize)) {
+    } else if (isNaN(Number(value.unitSize)) || Number(value.unitSize) <= 0) {
       errors.unitSize = "Enter a valid unit size";
     }
 
+    // unit type check
     if (!value.unitType) {
-      errors.unitType = "Quantity required";
+      errors.unitType = "Unit type required";
     }
 
+    // description check
     if (!value.description) {
       errors.description = "Description required";
     } else if (value.description.length > 50) {
       errors.description = "Description is too long (40 character limit)";
     }
 
+    // price check
     if (!value.price) {
       errors.price = "Price required";
-    } else if (!regPrice.test(value.price)) {
+    } else if (isNaN(Number(value.price)) || Number(value.price) <= 0) {
       errors.price = "Enter a valid price";
     }
 
@@ -89,36 +91,39 @@ const AddProductModal = (props) => {
     setProductObject({ ...productObject, [name]: value });
   };
 
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+      // Create preview URL for the selected image
+      const previewUrl = URL.createObjectURL(file);
+      setPreviewImage(previewUrl);
+    }
+  };
+
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    let pathway;
-
     const isValid = validateForm(productObject);
 
-    // loop through image array by productObject.name to get pathway and then set below
-    for (let i = 0; i < productImages.length; i++) {
-      if (
-        productImages[i].productName.includes(productObject.name.toLowerCase())
-      ) {
-        pathway = process.env.PUBLIC_URL + productImages[i].imagePathway;
-      }
-    }
-    if (!pathway) {
-      let placeholder = "/assets/product_images/placeholder.png";
-      pathway = process.env.PUBLIC_URL + placeholder;
-    }
-
     if (isValid) {
-      API.addProduct({
-        name: productObject.name,
-        unitSize: productObject.unitSize,
-        price: productObject.price,
-        quantity: productObject.quantity,
-        category: productObject.category,
-        unitType: productObject.unitType,
-        description: productObject.description,
-        pathway: pathway,
-      })
+      // Create a FormData object to handle file upload
+      const formData = new FormData();
+      
+      // Append all product data to the FormData
+      formData.append('name', productObject.name);
+      formData.append('unitSize', productObject.unitSize);
+      formData.append('price', productObject.price);
+      formData.append('quantity', productObject.quantity);
+      formData.append('category', productObject.category);
+      formData.append('unitType', productObject.unitType);
+      formData.append('description', productObject.description);
+      
+      // Append the image file if one is selected
+      if (selectedImage) {
+        formData.append('image', selectedImage);
+      }
+
+      API.addProduct(formData)
         .then(() => {
           setProductObject({
             name: "",
@@ -129,6 +134,8 @@ const AddProductModal = (props) => {
             unitType: "",
             description: "",
           });
+          setSelectedImage(null);
+          setPreviewImage("./assets/icons/addproducts.svg");
           props.loadProducts();
           props.handleAddProductModalState();
         })
@@ -149,13 +156,33 @@ const AddProductModal = (props) => {
           <form className="create-form">
             <div className="container has-text-centered">
               <div className="column is-10 is-offset-1">
-                <img
-                  title="Stock Image"
-                  id="product-image-add"
-                  src="./assets/icons/addproducts.svg"
-                  alt="fresh produce"
-                  height="auto"
-                />
+                <div className="image-upload-container">
+                  <img
+                    title="Product Image"
+                    id="product-image-add"
+                    src={previewImage}
+                    alt="Product preview"
+                    height="auto"
+                    className="product-image-preview"
+                  />
+                  <br />
+                  <div className="file">
+                    <label className="file-label">
+                      <input 
+                        className="file-input" 
+                        type="file" 
+                        name="image" 
+                        accept="image/*"
+                        onChange={handleImageChange}
+                      />
+                      <span className="file-cta">
+                        <span className="file-label">
+                          Choose a product image...
+                        </span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
                 <br />
 
                 {/* What kind of product it is */}
@@ -273,7 +300,7 @@ const AddProductModal = (props) => {
                   <div className="field add-products-fields">
                     <label className="label">Price</label>
                     <div className="control has-icons-left">
-                      <span className="icon is-small is-left">$</span>
+                      <span className="icon is-small is-left">LKR</span>
                       <input
                         className="input"
                         id="productPriceAdd"

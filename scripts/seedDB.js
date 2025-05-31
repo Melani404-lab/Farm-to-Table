@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const db = require("../models");
 
 mongoose.connect(
-  process.env.MONGODB_URI || "mongodb://localhost/farm-to-table",
+  process.env.MONGODB_URI || "mongodb+srv://supunprabodha789:4ErA18J6EeSkWDEi@farmtotable.rnuxau6.mongodb.net/?retryWrites=true&w=majority&appName=farmtotable",
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,

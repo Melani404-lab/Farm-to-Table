@@ -1,14 +1,13 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 
-const ProtectedRoute = ({ component: Component, role, token, ...rest }) => {
+const ProtectedRoute = ({ component: Component, token, role, adminOnly = false, ...rest }) => {
   return (
     <Route
       {...rest}
       render={(props) => {
-        if (token && role === "admin") {
-          return <Component {...rest} {...props} />;
-        } else {
+        // No token case - redirect to login
+        if (!token) {
           return (
             <Redirect
               to={{
@@ -20,6 +19,23 @@ const ProtectedRoute = ({ component: Component, role, token, ...rest }) => {
             />
           );
         }
+        
+        // Admin-only route but user is not an admin
+        if (adminOnly && role !== "admin") {
+          return (
+            <Redirect
+              to={{
+                pathname: "/",
+                state: {
+                  from: props.location,
+                },
+              }}
+            />
+          );
+        }
+        
+        // User is authenticated (and is admin if required)
+        return <Component {...rest} {...props} />;
       }}
     />
   );

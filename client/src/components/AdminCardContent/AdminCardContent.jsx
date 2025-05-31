@@ -35,7 +35,7 @@ const AdminCardContent = (props) => {
             </p>
             <p className="subtitle productDesc">{props.description}</p>
             <p className="subtitle productDetails">
-              ${props.price} per {props.unitSize} {props.unitType}
+              LKR {props.price} per {props.unitSize} {props.unitType}
             </p>
             <p className="subtitle productQuantity">
               Current Inventory: {props.quantity}

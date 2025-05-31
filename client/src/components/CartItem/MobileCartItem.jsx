@@ -46,8 +46,7 @@ const MobileCartItem = (props) => {
               alt="item description"
             />
             <span>
-              {props.lineItem.name} (${props.lineItem.price}/
-              {props.lineItem.unitType})
+              {props.lineItem.name} (LKR {props.lineItem.price}/{props.lineItem.unitType})
             </span>
           </div>
           <div className="flex-row">
@@ -64,7 +63,7 @@ const MobileCartItem = (props) => {
               />
             </div>
             <div className="half">
-              <label>Total Cost: </label>${props.lineItem.totalCost.toFixed(2)}
+              <label>Total Cost: </label>LKR {props.lineItem.totalCost.toFixed(2)}
             </div>
           </div>
         </div>

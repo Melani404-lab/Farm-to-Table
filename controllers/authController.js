@@ -6,11 +6,10 @@ const jwt = require("jsonwebtoken");
 
 router.post("/", ({ body }, res) => {
   // hash password
-
   bcrypt.hash(body.password, 10).then((hashPassword) => {
     // create database user object
     const newUser = {
-      email: body.email,
+      email: body.email.toLowerCase(), // Store emails in lowercase
       name: body.name,
       address: body.address,
       password: hashPassword,
@@ -29,34 +28,46 @@ router.post("/", ({ body }, res) => {
 });
 
 router.post("/login", (req, res) => {
-  User.findOne({ email: req.body.email.toLowerCase() })
+  // Convert email to lowercase for consistent comparison
+  const email = req.body.email.toLowerCase();
+  
+  User.findOne({ email: email })
     .then((user) => {
+      // Check if user exists
+      if (!user) {
+        console.log(`No user found with email: ${email}`);
+        return res.status(401).json({ message: "Invalid email or password" });
+      }
+
+      // Now we know user exists, compare passwords
       bcrypt
         .compare(req.body.password, user.password)
         .then((result) => {
-          const token = jwt.sign(
-            { _id: result._id },
-            process.env.JWT_SIGNATURE
-          );
-
           if (result) {
+            // Password matches, create token
+            const token = jwt.sign(
+              { _id: user._id },  // Fixed: using user._id instead of result._id
+              process.env.JWT_SIGNATURE
+            );
+
             res.json({
-              // send login token and userId
-              // jwt token has id in it to send back
               token: token,
               _id: user._id,
               role: user.role,
             });
           } else {
-            res.status(401).end();
+            // Password doesn't match
+            res.status(401).json({ message: "Invalid email or password" });
           }
         })
         .catch((err) => {
-          console.log(err);
+          console.log("Password comparison error:", err);
+          res.status(500).json({ message: "Server error" });
         });
     })
     .catch((err) => {
-      console.log(err);
+      console.log("User lookup error:", err);
+      res.status(500).json({ message: "Server error" });
     });
 });
 

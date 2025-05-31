@@ -129,7 +129,7 @@ const Cart = (props) => {
               <div className="column is-mobile">
                 <br />
                 <br />
-                <h6>Subtotal: ${subTotal.toFixed(2)}</h6>
+                <h6>Subtotal: LKR {subTotal.toFixed(2)}</h6>
                 <br />
 
                 <button

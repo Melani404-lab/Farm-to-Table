@@ -4,6 +4,7 @@ import "./BulmaNavBar.css";
 import { useContext } from "react";
 import CartContext from "../../utils/CartContext";
 import CartBadge from "../CartBadge/CartBadge";
+import MessageNotification from "../MessageNotification/MessageNotification";
 
 const BulmaNavBar = ({ role, token, setRole, setToken, setCartState }) => {
   const { lineItems } = useContext(CartContext);
@@ -121,6 +122,19 @@ const BulmaNavBar = ({ role, token, setRole, setToken, setCartState }) => {
           ) : (
             // renders a logout button if user is logged in (has a role)
             <>
+              {/* Add Messages link */}
+              <Link className="navbar-item" to="/messages">
+                <span className="icon" style={{ position: 'relative' }}>
+                  <img
+                    className="nav-icons"
+                    src="./assets/icons/message.svg"
+                    alt="message icon"
+                  />
+                  <MessageNotification />
+                </span>
+                <span id="nav-messages">Messages</span>
+              </Link>
+              
               <Link className="navbar-item" to="/" onClick={handleLogout}>
                 <span className="icon">
                   <img
@@ -169,28 +183,6 @@ const BulmaNavBar = ({ role, token, setRole, setToken, setCartState }) => {
             </Link>
           ) : null}
         </div>
-
-        {/* <div className="navbar-item">
-            <strong id="nav-text"
-              ><span style="display: none">
-                <span className="icon">
-                  <i className="fas fa-user-check"></i>
-                </span>
-                Logged in as <span id="username"></span></span
-            ></strong>
-          </div> */}
-
-        {/* <Link
-            className="navbar-item"
-            href="/logout"
-            id="logout"
-            style="display: none"
-          >
-            <span className="icon">
-              <i className="fas fa-sign-out-alt"></i>
-            </span>
-            <strong id="nav-text">Log Out</strong>
-          </Link> */}
       </div>
     </nav>
   );

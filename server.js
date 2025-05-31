@@ -10,6 +10,7 @@ const PORT = process.env.PORT || 3001;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("client/build"));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 mongoose.connect(
   process.env.MONGODB_URI || "mongodb://localhost/farm-to-table",
@@ -35,11 +36,13 @@ const AuthController = require("./controllers/authController");
 const ProductsController = require("./controllers/productsController");
 const OrdersController = require("./controllers/ordersController");
 const ContactController = require("./controllers/contactController");
+const MessagesController = require("./controllers/messagesController"); // New messages controller
 
 app.use("/api/users", AuthController);
 app.use(ProductsController);
 app.use(OrdersController);
 app.use(ContactController);
+app.use(MessagesController); // Add the messages routes
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "client/build/index.html"));
