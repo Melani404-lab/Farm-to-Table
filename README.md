@@ -12,18 +12,6 @@
   #### **Mobile**
   ![home page](client/public/assets/readMe/homeMobile.png)
 
-      
-   ## **Contributors**
-  * [Melanie Bostwick](https://github.com/mbostwick1)
-
-  * [Stephany Bolivar](https://github.com/gstephbolivar)  
-
-  * [Rashawn Raiford](https://github.com/raiford2530)
-      
-  * [Robert Anderson](https://github.com/reanderson89)
-
-  * [Neil Gandhi](https://github.com/ntch2000)
-
   
   ## **Technology Stack**
   Server Side: javascript, bcrypt, .env, jsonwebtokens, mjml, node-sass, nodemailer, nodemon, nodemailer-express-handlebars, mongoose
