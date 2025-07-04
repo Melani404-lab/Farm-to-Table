@@ -1,11 +1,5 @@
 # **Farm to Table**
   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-  
-  ## **Table of Contents**
-  * [Contributors](#contributors)
-  * [Questions](#questions)
-  * [License](#license)
-  * [Credits](#credits)
       
   ## **Live Link**
   https://glacial-falls-13622.herokuapp.com/      
@@ -37,43 +31,6 @@
   Client Side: javascript, axios, jsonwebtokens, mjml, node-sass, nodemailer-express-handlebars, prop-types, react, react-dom, react-router-dom, react-scripts, react-toastify, web-vitals, moment.js
 
   Database: MongoDB
-  
-
-
-  ## **Questions**   
-  ####    **For any questions or inquiries please contact us at,**
-
-
-**Melanie Bostwick**
-  * #### **GitHub:** [@mbostwick1](https://github.com/mbostwick1)
-  * #### **Email:** [mbostwick1@gmail.com](mbostwick1@gmail.com)
-
- **Stephany Bolivar**
-  * #### **GitHub:** [@gstephbolivar](https://github.com/gstephbolivar)
-  * #### **Email:** [g.stephanybolivar@gmail.com](g.stephanybolivar@gmail.com)
-  
-**Rashawn Raiford**
-  * #### **GitHub:** [@raiford2530](https://github.com/raiford2530)
-  * #### **Email:** [raiford87@gmail.com](raiford87@gmail.com)
-
-**Robert Anderson**
-  * #### **GitHub:** [@reanderson89](https://github.com/reanderson89)
-  * #### **Email:** [reanderson89@gmail.com](reanderson89@gmail.com)
-
-**Robert Anderson**
-  * #### **GitHub:** [@ntch2000](https://github.com/ntch2000)
-  * #### **Email:** [ngtych4@gmail.com](ngtych4@gmail.com)
-
-  ## **Credits**
-   * [Bulma](https://bulma.io/)
-   * [Font awesome](https://fontawesome.com/)
-   * [Bulma NavBar functionality](https://codepen.io/Nikitoss334/pen/VOEdVY)
-   * [Shutterstock: Skeleton Icon](https://www.shutterstock.com/g/rudiak)
-   * [Shutterstock: sokolfly](https://www.shutterstock.com/g/artemsokol)
-   * [Shutterstock: Ramosh Artworks](https://www.shutterstock.com/g/ramoshed)
-   * [Shutterstock: Sudowoodo](https://www.shutterstock.com/g/Sudowoodo)
-
-  
     
   ## **License**
   MIT
